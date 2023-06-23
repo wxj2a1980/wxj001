@@ -1,0 +1,29 @@
+pragma solidity ^0.4;
+contract Coin{
+    //set the "address" type variable minter
+    address public minter; 
+    /*convert "address"(for storing address or key ) 
+    to the type of "uint" which is as subscrip of object balances*/
+    mapping (address =>uint) public balances; 
+    // set an event so as to be seen publicly
+    event Sent(address from,address to,uint amount); 
+    //constructor only run once when creating contract,unable to invoke
+    //"msg" is the address of creator."msg.sender"  is 
+    constructor()public{
+        minter=msg.sender;
+    }
+    //铸币
+    //can only be called by creator
+    function mint(address receiver,uint amount)public{
+        require(msg.sender ==minter);
+        balances[receiver]+=amount;
+    }
+    //转账 
+    function send(address receiver,uint amount)public{
+        require(balances[msg.sender]>= amount);
+        balances[msg.sender]-=amount;
+        balances[receiver]+=amount;
+        emit Sent(msg.sender,receiver,amount);
+    }
+​
+}铸币代码
